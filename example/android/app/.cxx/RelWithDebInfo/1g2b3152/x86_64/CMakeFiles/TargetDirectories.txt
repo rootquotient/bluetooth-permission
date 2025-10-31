@@ -1,0 +1,2 @@
+/Users/apple/Desktop/bluetooth_poc/android/app/.cxx/RelWithDebInfo/1g2b3152/x86_64/CMakeFiles/edit_cache.dir
+/Users/apple/Desktop/bluetooth_poc/android/app/.cxx/RelWithDebInfo/1g2b3152/x86_64/CMakeFiles/rebuild_cache.dir

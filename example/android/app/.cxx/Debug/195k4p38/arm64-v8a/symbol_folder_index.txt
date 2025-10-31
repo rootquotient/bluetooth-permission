@@ -1,0 +1,1 @@
+/Users/apple/Desktop/bluetooth_poc/build/app/intermediates/cxx/Debug/195k4p38/obj/arm64-v8a

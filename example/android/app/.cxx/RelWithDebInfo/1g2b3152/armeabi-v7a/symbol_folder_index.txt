@@ -1,0 +1,1 @@
+/Users/apple/Desktop/bluetooth_poc/build/app/intermediates/cxx/RelWithDebInfo/1g2b3152/obj/armeabi-v7a
