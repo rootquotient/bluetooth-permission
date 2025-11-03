@@ -102,10 +102,5 @@ For reference on how to make use of the plugin, an example app using the plugin 
 
 # Example - Recordings
 
-**Android**
-<video src="/recordings/android_ advertiser.mp4" controls width="600"></video>
-<video src="/recordings/android_scanner.mp4" controls width="600"></video>
-
-**iOS**
-<video src="/recordings/android_ advertiser.mp4" controls width="600"></video>
-<video src="/recordings/android_scanner.mp4" controls width="600"></video>
+<video src="/recordings/advertiser.mp4" controls width="600"></video>
+<video src="/recordings/scanner.mp4" controls width="600"></video>
