@@ -120,6 +120,22 @@ public class BleOperationsPlugin: NSObject, FlutterPlugin, CBPeripheralManagerDe
         case "isBackgroundModeEnabled":
             result(backgroundTask != .invalid)
 
+        case "requestBluetoothPermissions":
+            if #available(iOS 13.1, *) {
+                let central = CBCentralManager()
+                switch central.authorization {
+                case .allowedAlways:
+                    result(true)
+                case .denied, .restricted, .notDetermined:
+                    self.locationManager?.requestAlwaysAuthorization()
+                    result(true)
+                @unknown default:
+                    result(false)
+                }
+            } else {
+                result(true)
+            }
+
         default:
             result(FlutterMethodNotImplemented)
         }
