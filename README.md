@@ -102,5 +102,5 @@ For reference on how to make use of the plugin, an example app using the plugin 
 
 # Example - Recordings
 
-<video src="/recordings/advertiser.mp4" controls width="600"></video>
-<video src="/recordings/scanner.mp4" controls width="600"></video>
+[View Recording](recordings/advertiser.mp4)
+[View Recording](recordings/scanner.mp4)
