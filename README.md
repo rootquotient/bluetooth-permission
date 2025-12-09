@@ -52,6 +52,34 @@ A Flutter plugin to perform Bluetooth Low Energy (BLE) operations such as:
 
 ---
 
+## Android Setup
+
+### Required Permissions
+
+Add the following permissions to your app's `AndroidManifest.xml` file:
+```xml
+<uses-feature
+    android:name="android.hardware.bluetooth_le"
+    android:required="false" />
+
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+<uses-permission android:name="android.permission.BLUETOOTH" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+<uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+
+<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+```
+
+---
+
 ## iOS Support and Limitations
 
 **Important Note:**  
@@ -74,33 +102,58 @@ Add the following keys to your app’s `Info.plist` file:
 <string>This app requires location access for BLE scanning.</string>
 ```
 
+---
+
 # Notes
 
-**Shared Preferences**
-Make sure you name the shared preferences key as follows to save and restore state: “ble_prefs”
-The keys of the key-value pairs in “ble_prefs” include:
-i. background_mode_enabled -- Boolean – to keep track whether background advertising was turned on/not
-ii. last_uuid -- String -- to save the most recent UUID used for advertising
+## Shared Preferences
+
+Make sure you name the shared preferences key as `"ble_prefs"` to save and restore state.
+
+**The keys of the key-value pairs in `"ble_prefs"` include:**
+
+1. **`background_mode_enabled`** (Boolean)  
+   Used to keep track of whether background advertising was turned on or not.
+
+2. **`last_uuid`** (String)  
+   Used to save the most recent UUID used for advertising.
+
 The UI makes use of this to manage state and reflect changes based upon it.
 
-**Using the ble_operations plugin in an app**
-1.Include the plugin under the dependencies section in the pubspec.yaml of the app you’re building.
-dependencies:
-ble_operations:
-path: the_path_to_the_plugin
+---
 
-2.During app launch at runtime request the necessary permissions required to perform the ble operations if not already granted using the requestBluetoothPermissions function that is already defined.
+## Using the ble_operations Plugin in an App
+
+### 1. Include the plugin
+
+Add the plugin under the `dependencies` section in the `pubspec.yaml` of the app you're building:
+```yaml
+dependencies:
+  ble_operations:
+    path: the_path_to_the_plugin
+```
+
+### 2. Request permissions at runtime
+
+During app launch at runtime, request the necessary permissions required to perform the BLE operations if not already granted using the `requestBluetoothPermissions` function that is already defined:
+```dart
 import 'package:ble_operations/ble_operations.dart';
 await BleOperations.requestBluetoothPermissions();
+```
 
-3.Import the ble_operations.dart file of the package to make use of the functions defined to perform the ble operations.
+### 3. Import and use BLE operations
+
+Import the `ble_operations.dart` file of the package to make use of the functions defined to perform the BLE operations:
+```dart
 import 'package:ble_operations/ble_operations.dart';
 await BleOperations.getScannedDevices();
+```
 
-For reference on how to make use of the plugin, an example app using the plugin is available under the example folder of the plugin.
+**For reference on how to make use of the plugin, an example app using the plugin is available under the `example` folder of the plugin.**
 
+---
 
 # Example - Recordings
 
-[View Recording](recordings/advertiser.mp4)
-[View Recording](recordings/scanner.mp4)
+ - [View Recording - Advertiser](recordings/advertiser.mp4)
+ - [View Recording - Scanner](recordings/scanner.mp4)

@@ -67,28 +67,20 @@ class BLEHomePageState extends State<BLEHomePage> with WidgetsBindingObserver {
 
   List<Map<String, dynamic>> _detectedBeacons = [];
   void _setupEventChannelListener() {
-    print('Setting up EventChannel listener...');
     _scanSubscription?.cancel();
     _scanSubscription = BleOperations.listenForScanResults().listen(
       (dynamic event) {
-        print('EventChannel received data: $event');
-        print('Event type: ${event.runtimeType}');
         if (event is Map<String, dynamic>) {
-          print('Processing device event: ${event['name']} - ${event['id']}');
           _handleDeviceDiscovered(event);
-        } else {
-          print('Invalid event format received: $event');
         }
       },
       onError: (dynamic error) {
-        print('EventChannel error: $error');
         _addLog('EventChannel error: $error');
       },
       onDone: () {
-        print('EventChannel stream closed');
+        _addLog('EventChannel stream closed');
       },
     );
-    print('EventChannel listener setup complete');
   }
 
   void _handleBeaconDetected(dynamic arguments) {
@@ -163,7 +155,6 @@ class BLEHomePageState extends State<BLEHomePage> with WidgetsBindingObserver {
           _handleDeviceUpdated(call.arguments);
           break;
         case 'onBeaconDetected':
-          print("Beacon Detected");
           _handleBeaconDetected(call.arguments);
           break;
         case 'onAdvertisingStarted':
@@ -230,7 +221,6 @@ class BLEHomePageState extends State<BLEHomePage> with WidgetsBindingObserver {
     final serviceUUIDs = List<String>.from(deviceInfo['serviceUUIDs'] ?? []);
     final isBeacon = deviceInfo['isBeacon'] == true;
 
-    print(deviceInfo.toString());
     _addLog(
         'Device discovered: ${deviceInfo['name']} (${deviceInfo['rssi']} dBm) - ID: ${deviceInfo['id']}');
 
@@ -285,7 +275,6 @@ class BLEHomePageState extends State<BLEHomePage> with WidgetsBindingObserver {
       }
     });
     _logStreamController.add(logMessage);
-    print(logMessage);
   }
 
   Future<void> _loadSavedUUID() async {
@@ -377,34 +366,29 @@ class BLEHomePageState extends State<BLEHomePage> with WidgetsBindingObserver {
 
   Future<void> _startScanning() async {
     try {
-      print('Calling platform.invokeMethod startScanning...');
       _addLog('Start scanning requested');
       await BleOperations.startScanning();
       if (_scanSubscription == null) {
-        print('No scan subscription found, setting up event channel...');
         _setupEventChannelListener();
       }
     } catch (e) {
-      print('Error starting scanning: $e');
       _addLog('Error starting scanning: $e');
       _showSnackBar('Failed to start scanning: $e');
     }
   }
 
   Future<void> _testEventChannel() async {
-    print('Testing EventChannel connection...');
     final testSub = BleOperations.listenForScanResults().listen(
       (dynamic event) {
-        print('TEST: EventChannel is working! Received: $event');
+        _addLog('TEST: EventChannel is working! Received: $event');
       },
       onError: (dynamic error) {
-        print('TEST: EventChannel error: $error');
+        _addLog('TEST: EventChannel error: $error');
       },
     );
 
     Timer(Duration(seconds: 5), () {
       testSub.cancel();
-      print('TEST: EventChannel test completed');
     });
   }
 

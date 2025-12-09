@@ -21,6 +21,8 @@ class BluetoothForegroundService : Service() {
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var advertiseCallback: AdvertiseCallback? = null
     private var isAdvertising = false
+    private lateinit var notificationManager: NotificationManager
+    
     companion object {
         const val ACTION_START = "com.rootquotient.ble_operations.action.START"
         const val ACTION_STOP = "com.rootquotient.ble_operations.action.STOP"
@@ -30,10 +32,10 @@ class BluetoothForegroundService : Service() {
         super.onCreate()
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as android.bluetooth.BluetoothManager
         bluetoothAdapter = bluetoothManager.adapter
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         createNotificationChannel()
     }
     private fun createNotificationChannel() {
-        val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 NOTIFICATION_CHANNEL_ID,
@@ -46,7 +48,7 @@ class BluetoothForegroundService : Service() {
                 enableVibration(false)
                 lockscreenVisibility = Notification.VISIBILITY_PUBLIC
             }
-            nm.createNotificationChannel(channel)
+            notificationManager.createNotificationChannel(channel)
         }
     }
 
@@ -124,17 +126,15 @@ private fun buildNotification(contentText: String): Notification {
                 isAdvertising = true
                 Log.i(TAG, "ForegroundService: Advertising started")
                 val notif = buildNotification("BLE advertising active")
-                val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 val prefs = getSharedPreferences("ble_prefs", Context.MODE_PRIVATE)
                 prefs.edit().putString("last_uuid", uuidStr).apply()
-                nm.notify(NOTIFICATION_ID, notif)
+                notificationManager.notify(NOTIFICATION_ID, notif)
             }
             override fun onStartFailure(errorCode: Int) {
                 super.onStartFailure(errorCode)
                 isAdvertising = false
                 Log.e(TAG, "ForegroundService: Advertising failed: $errorCode")
-                val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                nm.cancel(NOTIFICATION_ID)
+                notificationManager.cancel(NOTIFICATION_ID)
                 stopForeground(true)
                 stopSelf()
             }
@@ -144,8 +144,7 @@ private fun buildNotification(contentText: String): Notification {
             Log.i(TAG, "ForegroundService: request to start advertising sent")
         } catch (e: Exception) {
             Log.e(TAG, "ForegroundService: startAdvertising threw", e)
-            val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            nm.cancel(NOTIFICATION_ID)
+            notificationManager.cancel(NOTIFICATION_ID)
             stopForeground(true)
             stopSelf()
         }
@@ -168,8 +167,7 @@ private fun stopAdvertising() {
     } finally {
         advertiseCallback = null
         isAdvertising = false
-        val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        nm.cancel(NOTIFICATION_ID)
+        notificationManager.cancel(NOTIFICATION_ID)
     }
 }
 
@@ -225,4 +223,4 @@ override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
-}  
+}
